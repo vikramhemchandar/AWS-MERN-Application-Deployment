@@ -222,12 +222,12 @@ Now, **backend should be accessible at** https://backend.vikramhemchandar.live
 ## Frontend Configuration
 
 ### 1.	Configure 2 frontend EC2 instances (from the above AMI)
- - OS: Ubuntu
- - My AMIs: <select appropriate AMI>
- - network: select created VPC
- - subnet: public subnet
- - auto-assign public IP: Enable
- - Security group: SSH, HTTP, HTTPS, Port 3000 and 3001 enabled
+ - OS: Ubuntu <br>
+ - My AMIs: <select appropriate AMI> <br>
+ - network: select created VPC <br>
+ - subnet: public subnet  <br>
+ - auto-assign public IP: Enable <br>
+ - Security group: SSH, HTTP, HTTPS, Port 3000 and 3001 enabled <br>
 
 **Note:** Wait for 3-4 minutes for AMI to install the applications and configure the EC2: nginx, reverse proxy, node, GitHub clone repository
 <img width="477" height="466" alt="image" src="https://github.com/user-attachments/assets/75357c6e-b3f9-45b3-8cc5-9dc1264e4092" />
