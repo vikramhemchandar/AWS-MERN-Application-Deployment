@@ -90,7 +90,7 @@ Install NodeJS
 > curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 > sudo apt install -y nodejs
 ```
-**Note:** npm should be installed but it is path specific, hence, we will install for every EC2 instance respectively
+**Note:** npm should be installed in the specific path for backend and frontend, hence, we will install for every EC2 instance respectively
 Clone the code from GitHub Repository
 ```
 > git clone https://github.com/UnpredictablePrashant/TravelMemory
@@ -204,7 +204,7 @@ Under Create Application Load Balancer page, select:
   - Certificate (from ACM): <select the certificate which is created>
 - Click on Create load balancer
 
-**Note: ** wait for at least 2-3 minutes to get the status from provisioning to Active
+**Note:** wait for at least 2-3 minutes to get the status from provisioning to Active
 
 <img width="200" height="648" alt="image" src="https://github.com/user-attachments/assets/346f4696-c68c-4588-8b3a-ff64e4220951" /><br>
 <img width="410" height="194" alt="image" src="https://github.com/user-attachments/assets/5703154d-188b-452a-b8de-b1283f513df4" /><br>
@@ -215,25 +215,48 @@ Testing Load Balancer:
 Add CNAME to web hosting provider: Add the dns (backend endpoint) in your name as –
 - Type: CNAME
 - Host: backend
-- Value: dns (without prefix and suffix)
+- Value: dns (without prefix and suffix)<br>
 <img width="410" height="289" alt="image" src="https://github.com/user-attachments/assets/625ec287-e567-4165-8d40-e88b108084d6" /><br>
 Now, **backend should be accessible at** https://backend.vikramhemchandar.live
  
 ## Frontend Configuration
+
 ### 1.	Configure 2 frontend EC2 instances (from the above AMI)
-- OS: Ubuntu
--	My AMIs: <select appropriate AMI>
--	network: select created VPC
--	subnet: public subnet
--	auto-assign public IP: Enable
--	Security group: SSH, HTTP, HTTPS, Port 3000 and 3001 enabled
+ - OS: Ubuntu
+ - My AMIs: <select appropriate AMI>
+ - network: select created VPC
+ - subnet: public subnet
+ - auto-assign public IP: Enable
+ - Security group: SSH, HTTP, HTTPS, Port 3000 and 3001 enabled
+
 **Note:** Wait for 3-4 minutes for AMI to install the applications and configure the EC2: nginx, reverse proxy, node, GitHub clone repository
 <img width="477" height="466" alt="image" src="https://github.com/user-attachments/assets/75357c6e-b3f9-45b3-8cc5-9dc1264e4092" />
-asdf
 
-
-
-
+### 2.	Configure URL.js for frontend to connect to the backend service
+Copy the backend URL and navigate to /TravelMemory/frontend/src and edit the file url.js and paste the URL
+Verify NodeJS and npm versions
+```
+> nano url.js
+> cat url.js
+export const baseUrl = process.env.REACT_APP_BACKEND_URL || "https://backend.vikramhemchandar.live";
+```
+### 3.	Install npm for 2 frontend instances and start the backend server
+Install npm for 2 frontend instances
+```
+> cd TravelMemory/frontnd
+> sudo npm install
+```
+Verify NodeJS and npm versions
+```
+> node -v
+> npm -v
+```
+Start the backend server
+```
+> pwd
+/home/ubuntu/TravelMemory/backend
+> npm start
+```
 
 
 
