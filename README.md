@@ -218,12 +218,148 @@ Add CNAME to web hosting provider: Add the dns (backend endpoint) in your name a
 - Value: dns (without prefix and suffix)<br>
 <img width="410" height="289" alt="image" src="https://github.com/user-attachments/assets/625ec287-e567-4165-8d40-e88b108084d6" /><br>
 Now, **backend should be accessible at** https://backend.vikramhemchandar.live
- 
 
+## Frontend Configuration
 
+### 1.	Configure 2 frontend EC2 instances 
+ - OS: Ubuntu
+ - My AMIs: [select appropriate AMI]
+ - Network select created VPC
+ - Subnet: public subnet
+ - Auto-assign public IP: enable
+ - Security group: SSH, HTTP, HTTPS Port 3000, Port 3001
 
+**Note:** Wait for 3-4 minutes for AMI to configuure the instance and install all the applications: NGINX, Reverse Proxy, node, GitHub clone repository <br>
+<img width="477" height="466" alt="image" src="https://github.com/user-attachments/assets/dd07348f-6bdf-43b8-bc1b-7b6362a8a3e3" /> <br>
 
+### 2.	Configure URL.js for frontend to connect to the backend service
+Copy the backend URL and navigate to /TravelMemory/frontend/src and edit the file url.js and paste the URL
+Verify NodeJS and npm versions
+```
+> nano url.js
+> cat url.js
+export const baseUrl = process.env.REACT_APP_BACKEND_URL || "https://backend.vikramhemchandar.live";
+```
+### 3.	Install npm for 2 frontend instances and start the backend server
+Install npm for 2 frontend instances
+```
+> cd TravelMemory/frontnd
+> sudo npm install
+```
+Verify NodeJS and npm versions
+```
+> node -v
+> npm -v
+```
+Start the backend server
+```
+> pwd
+/home/ubuntu/TravelMemory/backend
+> npm start
+```
+Test the individual frontend servers:
+ - Copy the public IP servers of each and paste it in any browser and test the application
+ - Enter a travel memory detail in this page for the all the fields and submit it, it should save in the database
 
+### 4.	Create a certificate on ACM (AWS Certificate Manager) with your domain name
+**Note:** There should be a domain registered in any web hosting provider.
+For screenshots refer Step 8 in Backend Configuration
+
+On AWS, search ACM -> go to certificate manager -> Request and follow the below steps
+<img width="418" height="112" alt="image" src="https://github.com/user-attachments/assets/fb28175d-f49c-4753-80bb-14b41f93b943" /><br>
+
+In Request public certificate page, 
+ - Enter the below details:
+   - Domain names: full qualified domain name
+   - Once filled click on Request
+ - It will navigate to a page where it will have CNAME name and CNAME value
+ - Add CNAME name and CNAME value in your web hosting provide as CNAME record
+ - Wait for some time, ACM should show a message as issued for the certificate
+
+### 5.	Create Target Group (with HTTP) and Application Load Balancer (with HTTPS) protocol and test the Load balancer
+
+**Create Target Groups**, Navigate to EC2 -> Load Balancing -> Target Groups <br>
+Under Create target group page, select: Target Type: instances <br>
+ - Target group name: TravelMemory-TG-Frontend
+ - Protocol: HTTP
+ - Port: 80
+ - IP Address: IPv4
+ - VPC: (Select appropriate VPC)
+ - Protocol version: HTTP1
+ - Health checks: HTTP
+ - Click Next
+ - Under register targets page, select:
+   - Available instance: (select the two backend instances created)
+   - Click Include as pending below
+   - Make sure the ports should be 80
+•	Click on Next
+
+In Review and create (final) page, click Create target group
+
+**Create Load Balancer**, navigate to EC2 -> Load Balancing -> Load Balancers
+Select Application Load Balancer as type and click on create
+Under Create Application Load Balancer page, select:
+ - Load Balancer Name: Appropriate name
+ - Scheme: Internet-facing
+ - Load Balancer IP address: IPv4
+ - VPC: select appropriate VPC
+ - Security Groups: (select appropriate security groups)
+ - Under Listeners and routing:
+   - Protocol: HTTPS
+   - Port: 443
+ - Under Default action:
+   - Routing action: Forward to target groups
+   - Target group: <select recently created target group>
+ - Under Default SSL/TLS server certificate:
+   - Certificate source: From ACM
+   - Certificate (from ACM): <select the certificate which is created>
+ - Click on Create load balancer
+
+**Note:** wait for at least 2-3 minutes till it gets provisioning to Active status
+
+**Testing Load Balancer:**
+ - Once the ALB is active, copy the dns and paste it any browser. Prefix with https:// to the dns url and you should see Travel Memory application
+
+**Add CNAME** to web hosting provider: Add the dns (frontend endpoint) in your name as –
+ - Type: CNAME
+ - Host: @
+ - Value: dns (without prefix and suffix) <br>
+<img width="452" height="199" alt="image" src="https://github.com/user-attachments/assets/60730c04-4d4c-47ed-b007-7c6d20803b2c" /><br>
+
+## Domain Configuration
+**Add CNAME records for the domain**
+Add the below records:
+ - CNAME Record:
+   - Type: CNAME
+   - Host: www
+   - Value: vikramhemchandar.live<br>
+   
+In total, there should be 5 CNAME entries for this project:
+1.	Domain – host: www and value: vikramhemchandar.live
+2.	Backend certificate: Step 8 in Backend configuration (for backend.vikramhemchandar.live)
+3.	Frontend certificate: Step 4 in Frontend configuration (for www.vikramhemchandar.live)
+4.	Backend DNS endpoint entry
+5.	Frontend DNS endpoint entry
+
+**Tip** – if you need to configure IP address for a single instance, create A record and provide the IP Address of EC2 in Value column
+<img width="406" height="293" alt="image" src="https://github.com/user-attachments/assets/63cc4def-26be-4c66-8a1e-392e4e6219eb" />
+
+## Application Testing
+
+ - Open the application: https://www.vikramhemchandar.live<br>
+<img width="389" height="160" alt="image" src="https://github.com/user-attachments/assets/f5354b35-b537-465c-815f-9c8478f5067c" /><br>
+
+ - Click Add Experience and add your Travel Memory and submit<br>
+ <img width="389" height="372" alt="image" src="https://github.com/user-attachments/assets/5778d014-3da2-4744-aad9-da517375a91c" />
+
+ - Go to Travel memory on top left, you should see your travel memory entry added in the list. Here, it is Bali <br>
+  <img width="485" height="240" alt="image" src="https://github.com/user-attachments/assets/9c296c2b-984c-4e57-82b3-29e99a1f9d4e" />
+
+ - click on more details to see your travel memory details<br>
+ <img width="426" height="624" alt="image" src="https://github.com/user-attachments/assets/f23163e9-d933-4a8c-8c6a-d5eedbf48ed7" /><br>
+
+ - Database records for Travel Memory entries<br>
+ <img width="468" height="340" alt="image" src="https://github.com/user-attachments/assets/ddec28b8-aaee-4e40-806c-d5c787fc407e" />
 
 
 
