@@ -219,45 +219,7 @@ Add CNAME to web hosting provider: Add the dns (backend endpoint) in your name a
 <img width="410" height="289" alt="image" src="https://github.com/user-attachments/assets/625ec287-e567-4165-8d40-e88b108084d6" /><br>
 Now, **backend should be accessible at** https://backend.vikramhemchandar.live
  
-## Frontend Configuration
 
-### 1.	Configure 2 frontend EC2 instances
-From the above AMI images, configure 2 EC2 frontend instances<br>
- - OS: Ubuntu <br>
- - My AMIs: <select appropriate AMI> <br>
- - network: select created VPC <br>
- - subnet: public subnet  <br>
- - auto-assign public IP: Enable <br>
- - Security group: SSH, HTTP, HTTPS, Port 3000 and 3001 enabled <br>
-
-<br> **Note:** Wait for 3-4 minutes for AMI to install the applications and configure the EC2: nginx, reverse proxy, node, GitHub clone repository
-<img width="477" height="466" alt="image" src="https://github.com/user-attachments/assets/75357c6e-b3f9-45b3-8cc5-9dc1264e4092" />
-
-### 2.	Configure URL.js for frontend to connect to the backend service
-Copy the backend URL and navigate to /TravelMemory/frontend/src and edit the file url.js and paste the URL
-Verify NodeJS and npm versions
-```
-> nano url.js
-> cat url.js
-export const baseUrl = process.env.REACT_APP_BACKEND_URL || "https://backend.vikramhemchandar.live";
-```
-### 3.	Install npm for 2 frontend instances and start the backend server
-Install npm for 2 frontend instances
-```
-> cd TravelMemory/frontnd
-> sudo npm install
-```
-Verify NodeJS and npm versions
-```
-> node -v
-> npm -v
-```
-Start the backend server
-```
-> pwd
-/home/ubuntu/TravelMemory/backend
-> npm start
-```
 
 
 
