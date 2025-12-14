@@ -29,7 +29,7 @@ The project is to deploy a Travel Memory application using the MERN stack (Mongo
 4.	Application Testing <br>
 
 ## Architecture
-<img width="585" height="178" alt="image" src="https://github.com/user-attachments/assets/b0a65384-6df6-4680-abb4-f0c29ac77bea" />
+<img width="8241" height="2502" alt="image" src="https://github.com/user-attachments/assets/c59e8273-dcdd-4af3-adf9-b25ce11c595b" />
 
 **Flow of the application**
 
