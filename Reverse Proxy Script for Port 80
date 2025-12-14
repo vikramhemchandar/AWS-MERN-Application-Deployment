@@ -3,7 +3,7 @@ server {
     server_name vikramhemchandar.live www.vikramhemchandar.live;
     
     location / {
-        proxy_pass http://13.233.89.237:3000; #for backend use port 30001
+        proxy_pass http://13.233.89.237:3000; #for backend use port 30001 
         proxy_http_version 1.1;
 
         # Preserve client + original host info
