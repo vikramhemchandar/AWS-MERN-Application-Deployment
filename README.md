@@ -1,7 +1,7 @@
 ## MERN deployment on AWS Cloud
 
 ## Project Description
-The project is to deploy a Travel Memory application using the MERN stack (MongoDB,  Express.js, React and Node.js)  on AWS EC2 instances using different Application Load Balancers for frontend and backend services, and storing the data in the Mongo Database ensuring scalable architecture
+The project is to deploy a Travel Memory application using the MERN stack (MongoDB,  Express.js, React and Node.js)  on AWS EC2 instances using different Application Load Balancers for frontend and backend services, and storing the data in the Mongo Database ensuring scalable architecture.
 
 ## Requirements
 1.	Mongo DB Connection String
@@ -32,9 +32,25 @@ The project is to deploy a Travel Memory application using the MERN stack (Mongo
 <img width="8241" height="2502" alt="image" src="https://github.com/user-attachments/assets/c59e8273-dcdd-4af3-adf9-b25ce11c595b" />
 
 **Flow of the application**
+ - End user opens the browser and hits https://www.vikramhemchandar.live
+ - The hit goes to DNS (application load balancer end point) managed by web hosting provier (here namecheap.com)
+ - The hit is routed to DNS (which is frontend ALB)
+ - Frontend ALB listens on https (port 443)
+ - ALB does health checks of the frontend EC2 instances
+ - ALB distributes the traffic using round-robin / lead outstanding requests
+ - Frontend is communicated with backend by backend DNS (in url.js)
+ - The request is route to backend ALB
+ - Backend ALB listens on HTTPS (port 443)
+ - Backend ALB does health check on the backend EC2 instances
+ - Backend ALB is communicated to EC2 instances and communicates to database which connect via connection string (in .env)
+ - Response flow (reverse path): 
+   - MongoDB returns data -> Backend Node.js
+   - Backend Node.js returns API response -> Backend ALB
+   - Backend ALB -> Frontend browser (via React)
+   - React updates UI page is loaded 
 
 > [!NOTE]  
-> **Go to https://github.com/vikramhemchandar/draw.io to reuse the diagram**
+> **Go to https://github.com/vikramhemchandar/draw.io to reuse the architecture diagram**
 
 ## Backend Configuration
 ### 1.	Create a separate VPC dedicated for this deployment (not mandatory)** <br>
@@ -361,12 +377,14 @@ In total, there should be 5 CNAME entries for this project:
  - Database records for Travel Memory entries<br>
  <img width="468" height="340" alt="image" src="https://github.com/user-attachments/assets/ddec28b8-aaee-4e40-806c-d5c787fc407e" />
 
+#### 📄 License
 
+Author: Vikram Hem Chandar <br>
+Repository: https://github.com/vikramhemchandar/AWS-MERN-Application-Deployment
 
+This source code is provided for learning and reference purposes only.
 
-
-
-
+© 2025 Vikram Hem Chandar
 
 
 
